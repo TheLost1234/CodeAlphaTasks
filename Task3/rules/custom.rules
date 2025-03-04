@@ -1,0 +1,8 @@
+# Detect SSH brute force attempts
+alert ssh any any -> $HOME_NET any (msg:"Potential SSH brute force attempt"; flow:established; threshold:type threshold, track by_src, count 5, seconds 60; classtype:attempted-admin; sid:1000001; rev:1;)
+
+# Detect port scanning
+alert tcp any any -> $HOME_NET any (msg:"Possible port scan detected"; flags:S; threshold:type threshold, track by_src, count 50, seconds 60; classtype:attempted-recon; sid:1000002; rev:1;)
+
+# Detect SQL injection attempts
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"SQL Injection attempt detected"; content:"UNION"; nocase; http_uri; pcre:"/UNION.*SELECT/i"; classtype:web-application-attack; sid:1000003; rev:1;)
